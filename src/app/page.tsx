@@ -20,7 +20,7 @@ const Home = () => {
       {
         onRequest: () => {},
         onSuccess: () => {
-          window.alert("Account created successfully, you can now login");
+          window.alert("Account created successfully, you can now login,");
         },
         onError: () => {
           window.alert("something went wrong, please try again later");
