@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { OctagonAlertIcon } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import {FaGoogle , FaGithub} from 'react-icons/fa';
 import {
   Form,
   FormControl,
@@ -19,16 +20,16 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 export const SignInView = () => {
-  // Initialize the auth client
   const router = useRouter();
+  // Initialize the auth client
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,24 +44,43 @@ export const SignInView = () => {
     setError(null);
     setPending(true);
 
-    authClient.signIn
-      .email(
-        { email: data.email, password: data.password },
-        {
-          onSuccess: () => {
-            setPending(false);
-            router.push("/");
-          },
-          onError: (error) => {
-            setError(
-              error.error.message ||
-                "An error occurred while signing in. Please try again."
-            );
-          },
-        }
-      )
-     
+    authClient.signIn.email(
+      { email: data.email, password: data.password, callbackURL: "/" },
+      {
+        onSuccess: () => {
+          setPending(false);
+          router.push("/");
+        },
+        onError: (error) => {
+          setError(
+            error.error.message ||
+              "An error occurred while signing in. Please try again."
+          );
+        },
+      }
+    );
   };
+
+  const onSocial = (provider: "google" | "github") => {
+    setError(null);
+    setPending(true);
+
+    authClient.signIn.social(
+      { provider: provider, callbackURL: "/" },
+      {
+        onSuccess: () => {
+          setPending(false);
+        },
+        onError: (error) => {
+          setError(
+            error.error.message ||
+              "An error occurred while signing in. Please try again."
+          );
+        },
+      }
+    );
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden p-0">
@@ -130,17 +150,19 @@ export const SignInView = () => {
                     type="button"
                     variant="outline"
                     className="w-full"
-                   disabled={pending}
+                    disabled={pending}
+                    onClick={() => onSocial("google")}
                   >
-                    Google
+                    <FaGoogle className="h-4 w-4" />
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
                     className="w-full"
-                   disabled={pending}
+                    disabled={pending}
+                    onClick={() => onSocial("github")}
                   >
-                    GitHub
+                    <FaGithub className="h-4 w-4" />
                   </Button>
                 </div>
                 <div className="text-sm text-center">
