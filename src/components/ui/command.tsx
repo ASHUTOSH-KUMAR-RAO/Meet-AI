@@ -13,6 +13,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+} from "@/components/ui/drawer"
+import { useIsMobile } from "@/hooks/use-mobile";
+
 function Command({
   className,
   ...props
@@ -59,6 +68,47 @@ function CommandDialog({
     </Dialog>
   )
 }
+function CommandResponsiveDialog  ({
+  title = "Command Pellate",
+  description = "Search For a Command",
+  children,
+  ...props
+}: React.ComponentProps<typeof Dialog> & {
+  title?: string;
+  description?: string;
+})  {
+  const isMobile = useIsMobile();
+  
+  if (isMobile) {
+    return (  // ✅ RETURN keyword add karo
+      <Drawer {...props}>
+        <DrawerContent className="overflow-hidden p-0">
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>{title}</DrawerTitle>
+            <DrawerDescription>{description}</DrawerDescription>
+          </DrawerHeader>
+          <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+            {children}
+          </Command>
+        </DrawerContent>
+      </Drawer>
+    ); // ✅ Semicolon remove karo
+  }
+  
+  return (
+    <Dialog {...props}>
+      <DialogHeader className="sr-only">
+        <DialogTitle>{title}</DialogTitle>
+        <DialogDescription>{description}</DialogDescription>
+      </DialogHeader>
+      <DialogContent className="overflow-hidden p-0">
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+          {children}
+        </Command>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 function CommandInput({
   className,
@@ -173,6 +223,7 @@ function CommandShortcut({
 
 export {
   Command,
+  CommandResponsiveDialog,
   CommandDialog,
   CommandInput,
   CommandList,

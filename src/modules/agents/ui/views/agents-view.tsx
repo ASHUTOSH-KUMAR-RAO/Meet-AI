@@ -12,7 +12,12 @@ export const AgentsView = () => {
     trpc.agents.getMany.queryOptions()
   );
 
-  return <div>{JSON.stringify(data, null, 2)}</div>;
+  return (
+    <div>
+      
+      {JSON.stringify(data, null, 2)}
+    </div>
+  );
 };
 
 export const AgentsViewLoading = () => {
@@ -25,9 +30,9 @@ export const AgentsViewLoading = () => {
 };
 export const AgentsViewError = () => {
   return (
-     <ErrorState
-          title="Access Denied"
-          description="You don't have permission to access this resource."
-        />
+    <ErrorState
+      title="Access Denied"
+      description="You don't have permission to access this resource."
+    />
   );
 };
