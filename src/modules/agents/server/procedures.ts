@@ -4,13 +4,16 @@ import { agents } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init"; //todo=> tRPC router basically ek way hai apne API endpoints ko organize karne ka. Think of it as ek central hub jahan tum apne saare procedures (functions) define karte ho.
 import { agentsInsertSchema } from "../schemas";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns, sql, } from "drizzle-orm";
 import { Input } from "@/components/ui/input";
 
 
 export const agentsRouter = createTRPCRouter({
     getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => { // todo => aur pta hai yedi yeha per mai protectedProcedure nhi lagata to mere agents ke  data ko koi bhi dekh sakta tha isiliye maine yeha per baseProcedure ke place per protectedProcedure laga diya aab fully secure rahega 
-        const [existingData] = await db.select().from(agents).where(eq(agents.id, input.id))
+        const [existingData] = await db.select({
+            meetingCount:sql<number>`5`,
+            ...getTableColumns(agents),
+        }).from(agents).where(eq(agents.id, input.id))
 
         // await new Promise((resolve) => setTimeout(resolve, 5000))
 
