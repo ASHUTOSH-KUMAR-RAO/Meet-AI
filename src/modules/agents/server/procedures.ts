@@ -7,15 +7,26 @@ import { z } from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, sql, } from "drizzle-orm";
 import { Input } from "@/components/ui/input";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAXIMUM_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
+import { TRPCError } from "@trpc/server";
 
 
 export const agentsRouter = createTRPCRouter({
-    getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => { // todo => aur pta hai yedi yeha per mai protectedProcedure nhi lagata to mere agents ke  data ko koi bhi dekh sakta tha isiliye maine yeha per baseProcedure ke place per protectedProcedure laga diya aab fully secure rahega 
+    getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input, ctx }) => { // todo => aur pta hai yedi yeha per mai protectedProcedure nhi lagata to mere agents ke  data ko koi bhi dekh sakta tha isiliye maine yeha per baseProcedure ke place per protectedProcedure laga diya aab fully secure rahega 
         const [existingData] = await db.select({
             meetingCount: sql<number>`5`,
             ...getTableColumns(agents),
-        }).from(agents).where(eq(agents.id, input.id))
+        }).from(agents).where(
+            and
+                (
+                    eq(agents.id, input.id),
+                    eq(agents.userId, ctx.auth.user.id)
+                )
+        )
 
+
+        if (!existingData) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Agents Not Found" })
+        }
         // await new Promise((resolve) => setTimeout(resolve, 5000))
 
 
