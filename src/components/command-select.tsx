@@ -1,11 +1,7 @@
 import { ReactNode, useState } from "react";
-
 import { Button } from "./ui/button";
-
 import { ChevronsUpDownIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
-
 import {
   CommandEmpty,
   CommandInput,
@@ -20,7 +16,6 @@ interface Props {
     value: string;
     children: ReactNode;
   }>;
-
   onSelect: (value: string) => void;
   onSearch?: (value: string) => void;
   value: string;
@@ -28,6 +23,7 @@ interface Props {
   isSearchable?: boolean;
   className?: string;
 }
+
 const CommandSelect = ({
   options,
   onSelect,
@@ -37,18 +33,49 @@ const CommandSelect = ({
   placeholder = "Select An Option",
   isSearchable,
 }: Props) => {
-  const [open, seOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const selectedOption = options.find((option) => option.value === value);
+
   return (
     <>
       <Button
-      type="button"
-      variant="elevated"
-      className={cn("h-9 justify-between font-normal px-2",!selectedOption && "text-muted-foreground",className)}
+        type="button"
+        variant="elevated"
+        className={cn(
+          "h-9 justify-between font-normal px-2",
+          !selectedOption && "text-muted-foreground",
+          className
+        )}
+        onClick={() => setOpen(true)}
       >
         <div>{selectedOption?.children ?? placeholder}</div>
-        <ChevronsUpDownIcon/>
+        <ChevronsUpDownIcon />
       </Button>
+
+      <CommandResponsiveDialog
+        shouldFilter={!onSearch}
+        open={open}
+        onOpenChange={setOpen}
+      >
+        <CommandInput placeholder="Search..." onValueChange={onSearch} />
+        <CommandList>
+          <CommandEmpty>
+            <span>No Option Found</span>
+          </CommandEmpty>
+
+          {options.map((option) => (
+            <CommandItem
+              key={option.id}
+              onSelect={() => {
+                onSelect(option.value);
+                setOpen(false);
+              }}
+            >
+              {option.children}
+            </CommandItem>
+          ))}
+        </CommandList>
+      </CommandResponsiveDialog>
     </>
   );
 };

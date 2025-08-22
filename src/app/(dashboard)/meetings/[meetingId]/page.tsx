@@ -3,7 +3,7 @@ import React from 'react'
 
 const Page = () => {
   return (
-    <div>Meeting Id Page</div>
+    <div>Meeting Id </div>
   )
 }
 

@@ -1,25 +1,29 @@
 import { useTRPC } from "@/trpc/client";
-import {MeetingGetOne} from "@/modules/meetings/types"
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { MeetingGetOne } from "@/modules/meetings/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { meetingsInsertSchema } from "../../schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { useState } from "react";
+import CommandSelect from "@/components/command-select";
+import { GeneratedAvatar } from "@/components/generated-avatar";
+import NewAgentDialog from "@/modules/agents/ui/components/new-agent-dialog";
 interface Props {
-  onSuccess?: (id?:string) => void;
+  onSuccess?: (id?: string) => void;
   onCancel?: () => void;
   initialValue?: MeetingGetOne;
 }
@@ -27,6 +31,14 @@ interface Props {
 export const MeetingForm = ({ onCancel, onSuccess, initialValue }: Props) => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const [openNewAgentDialog, setOpenNewAgentDialog] = useState(false);
+  const [agentSearch, setAgentSearch] = useState("");
+  const agents = useQuery(
+    trpc.agents.getMany.queryOptions({
+      pageSize: 100,
+      search: agentSearch,
+    })
+  );
   const createMeeting = useMutation(
     trpc.meetings.create.mutationOptions({
       onSuccess: async (data) => {
@@ -82,38 +94,83 @@ export const MeetingForm = ({ onCancel, onSuccess, initialValue }: Props) => {
     }
   };
   return (
-    <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-       
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="e.g.C++ Instructor" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex items-center justify-between gap-x-2">
-          {onCancel && (
-            <Button
-              variant="ghost"
-              disabled={isPending}
-              type="button"
-              onClick={() => onCancel()}
-            >
-              Cancel
+    <>
+    <NewAgentDialog open={openNewAgentDialog} onOpenChange={setOpenNewAgentDialog}/>
+      <Form {...form}>
+        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            name="name"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="e.g.C++ Instructor" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="agentId"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Agent</FormLabel>
+                <FormControl>
+                  <CommandSelect
+                    options={(agents.data?.items ?? []).map((agent) => ({
+                      id: agent.id,
+                      value: agent.id,
+                      children: (
+                        <div className="flex items-center gap-x-2">
+                          <GeneratedAvatar
+                            seed="agent-name"
+                            variant="botttsNeutral"
+                            className="border size-6"
+                          />
+                          <span>{agent.name}</span>
+                        </div>
+                      ),
+                    }))}
+                    onSelect={field.onChange}
+                    onSearch={setAgentSearch}
+                    value={field.value}
+                    placeholder="Select An Agent"
+                  />
+                </FormControl>
+                <FormDescription>
+                  Not Found What your&apos;re Looking For?{" "}
+                  <button
+                    type="button"
+                    className="text-primary hover:underline"
+                    onClick={() => setOpenNewAgentDialog(true)}
+                  >
+                    Create New Agent
+                  </button>
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex items-center justify-between gap-x-2">
+            {onCancel && (
+              <Button
+                variant="ghost"
+                disabled={isPending}
+                type="button"
+                onClick={() => onCancel()}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button disabled={isPending} type="submit">
+              {isEdit ? "update" : "Create"}
             </Button>
-          )}
-          <Button disabled={isPending} type="submit">
-            {isEdit ? "update" : "Create"}
-          </Button>
-        </div>
-      </form>
-    </Form>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 };
