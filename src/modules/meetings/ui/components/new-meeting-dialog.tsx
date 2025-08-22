@@ -12,7 +12,7 @@ const NewMeetingDialog = ({ open, onOpenChange }: Props) => {
   const router = useRouter();
   return (
     <ResponsiveDialog
-      title="New Meetingd"
+      title="New Meeting Id"
       description="Create a new Meetings"
       open={open}
       onOpenChange={onOpenChange}
