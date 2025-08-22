@@ -1,15 +1,39 @@
 
 
 import { db } from "@/db";
-import {  meetings } from "@/db/schema";
+import { meetings } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init"; //todo=> tRPC router basically ek way hai apne API endpoints ko organize karne ka. Think of it as ek central hub jahan tum apne saare procedures (functions) define karte ho.
 import { z } from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAXIMUM_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
 import { TRPCError } from "@trpc/server";
+import { meetingsInsertSchema, meetingsUpdateSchema } from "../schemas";
 
 
 export const meetingsRouter = createTRPCRouter({
+
+     update: protectedProcedure.input(meetingsUpdateSchema).mutation(async ({ ctx, input }) => {
+    
+            const [updatedMeeting] = await db.update(meetings).set(input).where(and(eq(meetings.id, input.id), eq(meetings.userId, ctx.auth.user.id))).returning();
+            if (!updatedMeeting) {
+                throw new TRPCError({ code: "NOT_FOUND", message: "Meeting not found" })
+            }
+            return updatedMeeting;
+    
+        }),
+
+    create: protectedProcedure
+        .input(meetingsInsertSchema) // ✅ Plus schema name fix karna hai
+        .mutation(async ({ input, ctx }) => {
+            const [createdMeeting] = await db.insert(meetings).values({
+                ...input,
+                userId: ctx.auth.user.id
+            }).returning()
+            return createdMeeting;
+        }),
+
+        // Video Calling Agent Adding Here :- in Future
+
     getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input, ctx }) => { // todo => aur pta hai yedi yeha per mai protectedProcedure nhi lagata to mere meetings ke  data ko koi bhi dekh sakta tha isiliye maine yeha per baseProcedure ke place per protectedProcedure laga diya aab fully secure rahega 
         const [existingMeeting] = await db.select({
             ...getTableColumns(meetings),
