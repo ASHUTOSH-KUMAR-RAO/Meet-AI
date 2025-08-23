@@ -1,5 +1,4 @@
 
-
 import { db } from "@/db";
 import { agents, meetings } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init"; //todo=> tRPC router basically ek way hai apne API endpoints ko organize karne ka. Think of it as ek central hub jahan tum apne saare procedures (functions) define karte ho.
@@ -8,6 +7,7 @@ import { and, count, desc, eq, getTableColumns, ilike, sql, } from "drizzle-orm"
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAXIMUM_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
 import { TRPCError } from "@trpc/server";
 import { meetingsInsertSchema, meetingsUpdateSchema } from "../schemas";
+import { MeetingStatus } from "../types";
 
 
 export const meetingsRouter = createTRPCRouter({
@@ -58,10 +58,12 @@ export const meetingsRouter = createTRPCRouter({
         .input(z.object({
             page: z.number().default(DEFAULT_PAGE),
             pageSize: z.number().min(MIN_PAGE_SIZE).max(MAXIMUM_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
-            search: z.string().nullish()
+            search: z.string().nullish(),
+            agentId: z.string().nullish(),
+            status: z.enum([MeetingStatus.Upcoming, MeetingStatus.Completed, MeetingStatus.Active, MeetingStatus.Processing, MeetingStatus.Cancelled]).nullish()
         }))
         .query(async ({ ctx, input }) => {
-            const { search, page, pageSize } = input
+            const { search, page, pageSize, status, agentId } = input
             const data = await db.select({
                 ...getTableColumns(meetings),
                 agent: agents,
@@ -71,7 +73,9 @@ export const meetingsRouter = createTRPCRouter({
                 .where(
                     and(
                         eq(meetings.userId, ctx.auth.user.id),
-                        input?.search ? ilike(meetings.name, `%${search}%`) : undefined
+                        input?.search ? ilike(meetings.name, `%${search}%`) : undefined,
+                        status ? eq(meetings.status, status) : undefined,
+                        agentId ? eq(meetings.agentId, agentId) : undefined
                     )
                 )
 
@@ -86,7 +90,9 @@ export const meetingsRouter = createTRPCRouter({
                 .where(
                     and(
                         eq(meetings.userId, ctx.auth.user.id),
-                        input?.search ? ilike(meetings.name, `%${search}%`) : undefined
+                        input?.search ? ilike(meetings.name, `%${search}%`) : undefined,
+                        status ? eq(meetings.status, status) : undefined,
+                        agentId ? eq(meetings.agentId, agentId) : undefined
                     )
                 )
 

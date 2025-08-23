@@ -24,17 +24,21 @@ interface Props {
   className?: string;
 }
 
-const CommandSelect = ({
+export const CommandSelect = ({
   options,
   onSelect,
   onSearch,
   value,
   className,
   placeholder = "Select An Option",
-  isSearchable,
 }: Props) => {
   const [open, setOpen] = useState(false);
   const selectedOption = options.find((option) => option.value === value);
+
+  const handleOpenChange = (open: boolean) => {
+    onSearch?.("");
+    setOpen(open);
+  };
 
   return (
     <>
@@ -55,7 +59,7 @@ const CommandSelect = ({
       <CommandResponsiveDialog
         shouldFilter={!onSearch}
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={handleOpenChange}
       >
         <CommandInput placeholder="Search..." onValueChange={onSearch} />
         <CommandList>
@@ -79,5 +83,4 @@ const CommandSelect = ({
     </>
   );
 };
-
-export default CommandSelect;
+;
