@@ -9,6 +9,7 @@ interface Props {
   variant?: "empty" | "no-data" | "search";
   className?: string;
   imageSize?: "sm" | "md" | "lg";
+  image?:string
 }
 
 export const EmptyState = ({
@@ -18,7 +19,8 @@ export const EmptyState = ({
   retryText = "Try Again",
   variant = "empty",
   className = "",
-  imageSize = "md"
+  imageSize = "md",
+  image="/empty.svg"
 }: Props) => {
   // Image dimensions based on size
   const imageDimensions = {
@@ -53,7 +55,7 @@ export const EmptyState = ({
       {/* Image with optional overlay */}
       <div className="relative mb-8">
         <Image 
-          src="/empty.svg" 
+          src={image}
           alt="Empty state illustration" 
           width={imageDimensions[imageSize].width}
           height={imageDimensions[imageSize].height}
