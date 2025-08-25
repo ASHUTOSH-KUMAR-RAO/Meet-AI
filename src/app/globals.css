@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import url('https://unpkg.com/@stream-io/video-react-sdk@1.20.1/dist/css/index.css');
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
