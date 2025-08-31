@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🚀 Project Title & Tagline
+================================
 
-## Getting Started
+**Project Title:** Drizzle React
+**Tagline:** A Next.js React project that integrates Drizzle, Better Auth, Stream.io, and React Query to create a robust and scalable web application.
 
-First, run the development server:
+📖 Description
+--------------
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The Drizzle React project is a Next.js React application that utilizes the Drizzle framework to interact with a PostgreSQL database. The project also incorporates Better Auth for authentication, Stream.io for video streaming, and React Query for caching and fetching data. The project structure is designed to be modular, with each module responsible for a specific functionality.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+✨ Features
+------------
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Drizzle ORM**: The project uses Drizzle ORM to interact with the PostgreSQL database, providing a robust and scalable data access layer.
+2. **Better Auth**: The project uses Better Auth for authentication, allowing users to securely log in and access protected routes.
+3. **Stream.io Video Streaming**: The project integrates Stream.io for video streaming, enabling the creation of live and on-demand video content.
+4. **React Query**: The project uses React Query for caching and fetching data, providing a fast and efficient way to retrieve and update data.
+5. **Modular Architecture**: The project is designed with a modular architecture, allowing for easy maintenance and updates.
+6. **Type Safety**: The project uses TypeScript for type safety, ensuring that the code is robust and easy to maintain.
+7. **Next.js Integration**: The project is built using Next.js, providing a fast and efficient way to create and deploy web applications.
+8. **Error Handling**: The project includes error handling mechanisms to ensure that errors are caught and handled gracefully.
+9. **Code Generation**: The project uses code generation to create boilerplate code, reducing development time and increasing productivity.
+10. **Documentation**: The project includes detailed documentation, making it easy to understand and maintain.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🧰 Tech Stack
+-------------
 
-## Learn More
+| Tech | Version |
+| --- | --- |
+| React | 18.2.0 |
+| Next.js | 13.0.4 |
+| Drizzle | 1.10.0 |
+| Better Auth | 1.10.0 |
+| Stream.io | 1.20.1 |
+| React Query | 4.13.0 |
+| TypeScript | 4.7.4 |
+| PostgreSQL | 14.4 |
 
-To learn more about Next.js, take a look at the following resources:
+📁 Project Structure
+-------------------
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project structure is designed to be modular, with each module responsible for a specific functionality.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* `db`: Contains the database schema and connection settings.
+* `lib`: Contains utility functions and services.
+* `modules`: Contains separate modules for each feature (e.g. meetings, agents).
+* `pages`: Contains Next.js page components.
+* `public`: Contains static assets (e.g. images, fonts).
+* `styles`: Contains CSS styles and theme definitions.
+* `utils`: Contains utility functions and services.
 
-## Deploy on Vercel
+⚙️ How to Run
+--------------
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To run the project, follow these steps:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Install dependencies: `npm install`
+2. Start the development server: `npm run dev`
+3. Build and deploy the project: `npm run build` and `npm run deploy`
+
+🧪 Testing Instructions
+------------------------
+
+To run tests, follow these steps:
+
+1. Install dependencies: `npm install`
+2. Run tests: `npm run test`
+
+📸 Screenshots
+--------------
+
+[Insert screenshots of the application]
+
+📦 API Reference
+----------------
+
+[Stream io,O-auth]
+
+👤 Author
+---------
+
+* [Ashutosh Kumar Rao]
+
+📝 License
+---------
+
+* [MIT Licence]
+
+This README provides an overview of the Drizzle React project, including its features, tech stack, project structure, and testing instructions.
