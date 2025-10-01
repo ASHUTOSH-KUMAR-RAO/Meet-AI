@@ -24,7 +24,7 @@ export const meetingsRouter = createTRPCRouter({
             }
         ])
 
-        const expirationTime = Math.floor(Date.now() / 1000) + 60 * 60; // ! 1 hour from now  
+        const expirationTime = Math.floor(Date.now() / 1000) + 60 * 60; // ! 1 hour from now
 
         const issuedAt = Math.floor(Date.now() / 1000) - 60;
 
@@ -110,7 +110,7 @@ export const meetingsRouter = createTRPCRouter({
 
     // Video Calling Agent Adding Here :- in Future
 
-    getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input, ctx }) => { // todo => aur pta hai yedi yeha per mai protectedProcedure nhi lagata to mere meetings ke  data ko koi bhi dekh sakta tha isiliye maine yeha per baseProcedure ke place per protectedProcedure laga diya aab fully secure rahega 
+    getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input, ctx }) => { // todo => aur pta hai yedi yeha per mai protectedProcedure nhi lagata to mere meetings ke  data ko koi bhi dekh sakta tha isiliye maine yeha per baseProcedure ke place per protectedProcedure laga diya aab fully secure rahega
         const [existingMeeting] = await db.select({
             ...getTableColumns(meetings),
             agent: agents,
@@ -206,5 +206,3 @@ HTTP Method: POST/PUT/DELETE ke similar
 Examples: Create user, update post, delete record
 
 */
-
-
