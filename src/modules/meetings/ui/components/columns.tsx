@@ -14,15 +14,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { MeetingGetMany } from "../../types";
-import { cn } from "@/lib/utils";
+import { cn, formatDuration } from "@/lib/utils";
 
-function formatDuration(second: number) {
-  return humanizeDuration(second * 1000, {
-    largest: 1,
-    round: true,
-    units: ["h", "m", "s"],
-  });
-}
 
 const statusIconMap = {
   upcoming: ClockArrowUpIcon,
